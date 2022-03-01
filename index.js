@@ -4,123 +4,60 @@ const {
 } = require("apollo-server-core");
 
 const { locations, events, participants, users } = require("./data");
-const typeDefs = gql`
-  type User {
-    id: ID!
-    username: String!
-    email: String!
-    events: [events!]!
-    
-  }
-  type events {
-    id: ID!
-    title: String!
-    desc: String!
-    date: String!
-    from: String!
-    to: String!
-    location_id: String!
-    user_id: String!
-    location: locations!
-    participants: [participants!]!
-  }
-  type locations {
-    id: ID!
-    name: String!
-    desc: String!
-    lat: String!
-    lng: String!
-  }
 
-  type participants {
-    id: ID!
-    user_id: String!
-    event_id: String!
-  }
+const {
+  createUser,
+  createEvent,
+  createLocation,
+  createParticipant,
+} = require("./mutations/CreateMutations");
 
-  type Query {
-     # users
-     users: [User!]!
-     user (id: ID!): User!
- 
-    # events
-    events: [events!]!
-    event(id: ID!): events!
+const { userQuery, userEventQuery } = require("./queries/UserQuery");
+const {
+  eventQuery,
+  eventLocationQuery,
+  eventParticipantsQuery,
+} = require("./queries/EventQuery");
+const { locationQuery } = require("./queries/LocationQuery");
+const { participantQuery } = require("./queries/ParticipantQuery");
 
-    # locations
-    locations: [locations!]!
-    location(id: ID!): locations
+const { typeDefsQuery } = require("./typeDefs");
 
-    # participants
-    participants: [participants!]!
-    participant(id: ID!): participants
-   
-  }
-`;
+const typeDefs = typeDefsQuery;
 
 const resolvers = {
+  Mutation: {
+    //! Create Mutations
+    createUser: createUser,
+    createEvent: createEvent,
+    createLocation: createLocation,
+    createParticipant: createParticipant,
+  },
+
   Query: {
     //! User Queries
-    users  : () => users,
-    user: (parent, args, context, info) => {
-            const user = users.find(user => user.id === args.id);
-            if(!user){
-                throw Error("User not found")
-            }
-            return user;
-        },
+    users: () => users,
+    user: userQuery,
+
     //! Events Queries
     events: () => events,
-    event : (parent, args) => {
-            const event = events.find(event => event.id === args.id);
-            if(!event){
-                throw Error("Event not found")
-            }
-            return event;
-        
-    },
+    event: eventQuery,
 
     //! Locations Queries
     locations: () => locations,
-    location: (parent, args) => {
-            const location = locations.find(location => location.id === args.id);
-            if(!location){
-                throw Error("Location not found")
-            }
-            return location;
-        
-    },
+    location: locationQuery,
 
     //! Participants Queries
     participants: () => participants,
-    participant: (parent, args) => {
-            const participant = participants.find(participant => participant.id === args.id);
-            if(!participant){
-                throw Error("Participant not found")
-            }
-            return participant;
-        
-    }
-
-
+    participant: participantQuery,
   },
   User: {
-    events: (parent, args, context, info) => {
-      return events.filter(event => event.user_id === parent.id);
-    }
+    events: userEventQuery,
   },
   events: {
-    location: (parent, args, context, info) => {
-      return locations.find(location => location.id === parent.location_id);
-    },
-    participants: (parent, args, context, info) => {
-      return participants.filter(
-        participant => participant.event_id === parent.id
-      );
-    }
-  }
-
-
+    location: eventLocationQuery,
+    participants: eventParticipantsQuery,
+  },
 };
 
 const server = new ApolloServer({
