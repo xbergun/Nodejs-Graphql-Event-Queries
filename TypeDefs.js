@@ -60,6 +60,7 @@ type Mutation {
   updateUser(id: ID!, username: String!, email: String!, password: String!): User!
   
   deleteUser(id: ID!): User!
+  deleteAllUsers: [User!]!
   
   # events
   createEvent(title: String!, desc: String!, date: String!, from: String!, to: String!, location_id: String!, user_id: String!): events!
@@ -67,6 +68,7 @@ type Mutation {
   updateEvent(id: ID!, title: String!, desc: String!, date: String!, from: String!, to: String!, location_id: String!, user_id: String!): events!
 
   deleteEvent(id: ID!): events!
+  deleteAllEvents: [events!]!
 
   # locations
   createLocation(name: String!, desc: String!, lat: String!, lng: String!): locations!
@@ -74,6 +76,7 @@ type Mutation {
   updateLocation(id: ID!, name: String!, desc: String!, lat: String!, lng: String!): locations!
 
   deleteLocation(id: ID!): locations!
+  deleteAllLocations: [locations!]!
 
   # participants
   createParticipant(user_id: String!, event_id: String!): participants!
@@ -81,6 +84,7 @@ type Mutation {
   updateParticipant(id: ID!, user_id: String!, event_id: String!): participants!
 
   deleteParticipant(id: ID!): participants!
+  deleteAllParticipants: [participants!]!
 
 
 

@@ -21,6 +21,20 @@ const {
 const { locationQuery } = require("./queries/LocationQuery");
 const { participantQuery } = require("./queries/ParticipantQuery");
 
+const {deleteUser,
+  deleteAllUsers,
+  deleteEvent,
+  deleteAllEvents,
+  deleteLocation,
+  deleteAllLocations,
+  deleteParticipant,
+  deleteAllParticipants
+} = require("./mutations/DeleteMutations");
+
+
+
+
+
 const { typeDefsQuery } = require("./typeDefs");
 
 const typeDefs = typeDefsQuery;
@@ -29,15 +43,24 @@ const resolvers = {
   Mutation: {
     //! Create Mutations
     createUser: createUser,
+    deleteUser: deleteUser,
+    deleteAllUsers: deleteAllUsers,
     createEvent: createEvent,
+    deleteEvent: deleteEvent,
+    deleteAllEvents: deleteAllEvents,
     createLocation: createLocation,
+    deleteLocation: deleteLocation,
+    deleteAllLocations: deleteAllLocations,
     createParticipant: createParticipant,
+    deleteParticipant: deleteParticipant,
+    deleteAllParticipants: deleteAllParticipants
   },
 
   Query: {
     //! User Queries
     users: () => users,
     user: userQuery,
+    
 
     //! Events Queries
     events: () => events,
